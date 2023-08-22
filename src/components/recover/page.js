@@ -42,74 +42,66 @@ const ResetPassword = () => {
     confirmpassword: ''
    }
    const handlesubmit_self = async (values, { setSubmitting, resetForm }) => {
-
-     var username = values.username
-     var initpassword = values.initpassword
-
-     try {
-       const response = await axios.post(`${STG_URL}/creds-manager/invite-user`, {
-         email: username,
-         password: initpassword,
-         // password_confirmation: ,
-         // company_code: ,
-         // token: ,
-       }, {
-         headers: {
-           Accept: "application/json",
-           "Content-Type": "application/json",
-           Authorization: "Bearer " + token,
-         }
-       });
+    console.log('self..')
+    var username = values.username
+    var initpassword = values.initpassword
+  
+   await fetch(`${STG_URL}/creds-manager/reset`,{
+  
+     method: "POST",
+     headers: {
+       Accept: "application/json",
+       "Content-Type": "application/json",
+       Authorization: "Bearer " + token
+     },
+     body: JSON.stringify({
+       email: username,
+       password: initpassword,
+       url: btoa(window.location.href)
+     }),
+   })
+   .then(response => {
+     return response.json()
+   })
+   .then(function(res) {
+  
+     const {success} = res
      
-       const res = response.data;
-       const { success } = res;
-       
-       if (success) {
-         Swal.fire({
-           icon: "success",
-           title: "Registered",
-           text: res.data[0],
-           timer: 10000,
-         });
-       } else {
-         Swal.fire({
-           icon: "error",
-           title: res.data[0],
-           timer: 10000,
-         });
-       }
-     
-       if (username === "") {
-         Swal.fire({
-           icon: "error",
-           title: res.data[0].email[0],
-           timer: 10000,
-         });
-       }
-     } catch (error) {
-      
-      const res2 = error.response;
-      console.log('res2',res2)
-      if(res2.data.message == "Unauthenticated." && res2.status !== 200){
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: res2.data.message,
-          text: "Token expired",
-          timer: 10000,
-        });
-      }else{
-        Swal.fire({
-          icon: "error",
-          title: "Something went wrong!",
-          text: "Failed",
-          timer: 10000,
-        });
-      }
+     if(success){
+       Swal.fire({
+         icon: "success",
+         title: res.data.msg,
+         text:  res.data.msg,
+         timer: 10000,
+      })
+     }else if(!success){
+       Swal.fire({
+         icon: "error",
+         title: res.data[0],
+         timer: 10000,
+      })
+     } 
+     if(username === "") {
+       Swal.fire({
+         icon: "error",
+         // title: res.data[0],
+         title:  res.data[0].email[0],
+         timer: 10000,
+      })
      }
   
- 
-}
+   })
+   .catch(e => {
+     Swal.fire({
+       icon: "error",
+       title: "Something went wrong!",
+       text: "Please check your internet connection",
+       timer: 10000,
+     })
+   })
+  
+  
+  }
 const handlesubmit_create = async (values, { setSubmitting, resetForm }) => {
   const password = values.initpassword
   const confirmpassword = values.confirmpassword
