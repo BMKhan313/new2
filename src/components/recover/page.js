@@ -235,8 +235,8 @@ const handlesubmit_create = async (values, { setSubmitting, resetForm }) => {
 }
 
   const validationSchema = yup.object({
-    // username: yup.string().required('Required'),
-    // initpassword: yup.string().required('Required'),
+    initpassword: yup.string().required('Required'),
+    confirmpassword: yup.string().required('Required'),
     confirmpassword: yup.string()
     .oneOf([yup.ref('initpassword'), null], 'Passwords must match')
  })
