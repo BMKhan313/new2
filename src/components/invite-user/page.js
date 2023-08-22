@@ -25,7 +25,9 @@ const InviteUser = () => {
   };
   
   const onChange = (e) => {
+    
     setValue(e.target.value)
+    console.log('radio', value)
   }
    const initialValues = {
     username: '',
@@ -34,10 +36,10 @@ const InviteUser = () => {
    }
   
    const handlesubmit_self = async (values, { setSubmitting, resetForm }) => {
-    
+     console.log('self invite')
      var username = values.username
      var initpassword = values.initpassword
-    
+     
 
 // ... other code ...
 
@@ -103,8 +105,9 @@ try {
 }
 const handlesubmit_create = async (values, { setSubmitting, resetForm }) => {
   
+  const username = values.username
   const password = values.initpassword
- 
+  console.log('handlecreate')
   try {
     const response = await axios.post(`${STG_URL}/creds-manager/invite-user`, {
       email: username,
@@ -185,7 +188,7 @@ const handlesubmit_create = async (values, { setSubmitting, resetForm }) => {
       <Formik className="h-screen flex-1 justify-start"
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={value === "1" ? handlesubmit_create : handlesubmit_self}
+      onSubmit={value == "2" ? handlesubmit_create : handlesubmit_self}
       >
       
         <Form className="mt-5 ml-7">
